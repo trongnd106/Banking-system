@@ -40,10 +40,15 @@ public class UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
+    OtpService otpService;
 
-    public UserResponse create(UserCreateRequest request){
+    public String register(UserCreateRequest request){
         if(userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
+
+        // Tạo OTP và gửi OTP đến số điện thoại của người dùng
+        String otp = otpService.generateOtp(request.getPhone());
+        otpService.sendOtpToPhoneNumber(request.getPhone(), otp); // Gửi OTP qua SMS
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -57,7 +62,12 @@ public class UserService {
         staffRole.setName("STAFF");
         user.setRoles(new HashSet<>(Collections.singletonList(staffRole)));
 
-        return userMapper.toUserResponse(userRepository.save(user));
+
+        // Lưu thông tin user tạm thời vào Redis cho đến khi xác thực
+        otpService.saveUserTemporary(user);
+
+        // Thông báo OTP đã được gửi
+        return ("OTP has been sent to " + request.getPhone());
     }
 
     @PreAuthorize("hasAuthority('VIEW_USER_LIST')")

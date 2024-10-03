@@ -33,10 +33,10 @@ public class UserController {
     @Operation(summary = "Add new user",
             description = "Send a request via this API to create new user")
     @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
-        return ApiResponse.<UserResponse>builder()
+    ApiResponse<String> createUser(@RequestBody UserCreateRequest request){
+        return ApiResponse.<String>builder()
                 .code(2000)
-                .result(userService.create(request))
+                .result(userService.register(request))
                 .message("Create user successfully!")
                 .build();
     }

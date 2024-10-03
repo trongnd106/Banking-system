@@ -26,3 +26,8 @@ open:
     description: Banking System
     serverUrl: http://localhost:8080/zen8labs-system
     serverName: Server Test
+
+twilio:
+  account-sid: "AC5b8d0a13801f9246d201cf51149dd9eb"
+  auth-token: "0488d6add408ecf9d51609583ddc07db"
+  from-phone: "+12093182802"

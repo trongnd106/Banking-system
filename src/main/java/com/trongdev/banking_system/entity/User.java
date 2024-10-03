@@ -32,6 +32,7 @@ public class User {
     @Column(unique = true)
     String identityCard;
     int isActive;
+    int isVerified;
     Timestamp createdAt;
     Timestamp updatedAt;
     @ManyToMany
